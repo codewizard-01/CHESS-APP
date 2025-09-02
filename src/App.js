@@ -127,34 +127,32 @@ export default function App() {
   };
 
   return (
-    <div style={{ padding: 20, fontFamily: "sans-serif" }}>
+    <div className="App">
       <h2>Bet on Your Intelligence</h2>
 
-      <div style={{ display: "flex", gap: 20 }}>
+      <div className="App-board">
         <div>
           {/* board container: chessboard.js will render into this div */}
           <div ref={boardRef} style={{ width: 480 }} />
         </div>
 
-        <div style={{ minWidth: 320 }}>
+        <div className="App-info">
           <div>
             <strong>Status:</strong>
           </div>
-          <div style={{ marginBottom: 12 }}>{status}</div>
+          <div className="App-info-item">{status}</div>
 
           <div>
             <strong>FEN:</strong>
           </div>
-          <div style={{ wordBreak: "break-all", marginBottom: 12 }}>{fen}</div>
+          <div className="board-snapshot">{fen}</div>
 
           <div>
             <strong>PGN:</strong>
           </div>
-          <div style={{ wordBreak: "break-all", marginBottom: 12 }}>
-            {pgn || "(empty)"}
-          </div>
+          <div className="board-record">{pgn || "(empty)"}</div>
 
-          <div style={{ display: "flex", gap: 8 }}>
+          <div className="App-info-actions">
             <button onClick={resetBoard}>Reset</button>
             <button onClick={undoMove}>Undo</button>
           </div>
