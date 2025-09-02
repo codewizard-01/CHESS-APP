@@ -160,3 +160,29 @@ h2 {
   color: #bdbdbd;
   font-size: 1em;
 }
+
+.timers-row {
+  display: flex;
+  gap: 16px;
+  margin: 12px 0 18px 0;
+  justify-content: space-between;
+}
+
+.timer-box {
+  flex: 1;
+  background: #23272b;
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: #7fff7f;
+  font-family: "Fira Mono", "Consolas", monospace;
+  font-size: 1.1em;
+  text-align: center;
+  font-weight: bold;
+}
+
+.white-timer span,
+.black-timer span {
+  color: #fff;
+  font-weight: normal;
+  margin-right: 6px;
+}

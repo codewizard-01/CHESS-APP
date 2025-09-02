@@ -3,6 +3,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import "./App.css";
 
+const TIME_OPTIONS = [
+  { label: "10 min", value: 10 * 60 },
+  { label: "5 min", value: 5 * 60 },
+  { label: "1 min", value: 1 * 60 },
+];
+
 export default function App() {
   const boardRef = useRef(null); // DOM node for the board
   const boardInstance = useRef(null); // chessboard.js instance
@@ -15,6 +21,12 @@ export default function App() {
   // Add this state to store moves as arrays
   const [whiteMoves, setWhiteMoves] = useState([]);
   const [blackMoves, setBlackMoves] = useState([]);
+
+  const [selectedTime, setSelectedTime] = useState(TIME_OPTIONS[0].value);
+  const [whiteTime, setWhiteTime] = useState(TIME_OPTIONS[0].value);
+  const [blackTime, setBlackTime] = useState(TIME_OPTIONS[0].value);
+  const [activeColor, setActiveColor] = useState("w");
+  const timerRef = useRef(null);
 
   // helper to be compatible with different chess.js versions (in_checkmate / isCheckmate)
   const _inCheck = (g) =>
@@ -97,8 +109,36 @@ export default function App() {
     };
   }, []); // run once
 
+  // Timer effect
+  useEffect(() => {
+    if (_inCheckmate(game.current) || _inDraw(game.current)) {
+      clearInterval(timerRef.current);
+      return;
+    }
+    clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setWhiteTime((t) => (activeColor === "w" && t > 0 ? t - 1 : t));
+      setBlackTime((t) => (activeColor === "b" && t > 0 ? t - 1 : t));
+    }, 1000);
+    return () => clearInterval(timerRef.current);
+    // eslint-disable-next-line
+  }, [activeColor]);
+
+  // Stop timer if time runs out
+  useEffect(() => {
+    if (whiteTime === 0 || blackTime === 0) {
+      clearInterval(timerRef.current);
+      setStatus(
+        whiteTime === 0 ? "Time's up! Black wins." : "Time's up! White wins."
+      );
+    }
+    // eslint-disable-next-line
+  }, [whiteTime, blackTime]);
+
+  // Update activeColor on move
   function updateStatus() {
     const moveColor = game.current.turn() === "w" ? "White" : "Black";
+    setActiveColor(game.current.turn());
 
     // Parse moves for columns
     const history = game.current.history();
@@ -125,11 +165,33 @@ export default function App() {
     setStatus(s);
   }
 
-  const resetBoard = () => {
-    game.current.reset(); // reset engine
-    if (boardInstance.current) boardInstance.current.start(); // reset board UI
+  function formatTime(seconds) {
+    const m = Math.floor(seconds / 60)
+      .toString()
+      .padStart(2, "0");
+    const s = (seconds % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  }
+
+  // Handle time control change
+  const handleTimeChange = (e) => {
+    const val = Number(e.target.value);
+    setSelectedTime(val);
+    setWhiteTime(val);
+    setBlackTime(val);
+    resetBoard(val);
+  };
+
+  // Update resetBoard to accept time
+  const resetBoard = (time = selectedTime) => {
+    game.current.reset();
+    if (boardInstance.current && boardInstance.current.position)
+      boardInstance.current.position("start");
     setFen(game.current.fen());
     setPgn("");
+    setWhiteTime(time);
+    setBlackTime(time);
+    setActiveColor("w");
     updateStatus();
   };
 
@@ -162,6 +224,29 @@ export default function App() {
             <strong>FEN:</strong>
           </div>
           <div className="board-snapshot">{fen}</div>
+
+          <div>
+            <strong>Time Control:</strong>
+            <select
+              value={selectedTime}
+              onChange={handleTimeChange}
+              style={{ marginLeft: 8 }}
+            >
+              {TIME_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="timers-row">
+            <div className="timer-box white-timer">
+              <span>White:</span> {formatTime(whiteTime)}
+            </div>
+            <div className="timer-box black-timer">
+              <span>Black:</span> {formatTime(blackTime)}
+            </div>
+          </div>
 
           <div>
             <strong>Moves:</strong>
