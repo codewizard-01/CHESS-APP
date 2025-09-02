@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
   padding: 20px;
   font-family: "sans-serif";
@@ -30,4 +30,100 @@
 .App-info-actions {
   display: flex;
   gap: 8px;
+} */
+body {
+  background: #23272b;
+}
+
+.App {
+  text-align: center;
+  padding: 40px 0;
+  font-family: "Segoe UI", "sans-serif";
+  background: #23272b;
+  min-height: 100vh;
+}
+
+.App-board {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  margin-top: 32px;
+}
+
+.App-board > div:first-child {
+  background: #2e3b2f;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.App-info {
+  min-width: 340px;
+  background: #32373b;
+  border-radius: 12px;
+  padding: 24px 20px;
+  color: #e0e0e0;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  text-align: left;
+}
+
+.App-info-item {
+  margin-bottom: 18px;
+  font-size: 1.1em;
+  color: #7fff7f;
+  font-weight: 600;
+}
+
+.board-snapshot,
+.board-record {
+  word-break: break-all;
+  margin-bottom: 18px;
+  background: #23272b;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: #bdbdbd;
+  font-family: "Fira Mono", "Consolas", monospace;
+  font-size: 0.98em;
+}
+
+.App-info-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.App-info-actions button {
+  background: #388e3c;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.App-info-actions button:hover {
+  background: #2e7031;
+}
+
+h2 {
+  color: #7fff7f;
+  letter-spacing: 1px;
+  margin-bottom: 0;
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 900px) {
+  .App-board {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  .App-info {
+    min-width: 0;
+    width: 100%;
+  }
 }

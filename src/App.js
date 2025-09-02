@@ -1,6 +1,7 @@
 // src/App.js
 import React, { useEffect, useRef, useState } from "react";
 import { Chess } from "chess.js"; // npm install chess.js
+import "./App.css";
 
 export default function App() {
   const boardRef = useRef(null); // DOM node for the board
