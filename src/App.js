@@ -1,6 +1,6 @@
 // src/App.js
 import React, { useEffect, useRef, useState } from "react";
-import { Chess } from "chess.js"; // npm install chess.js
+import { Chess } from "chess.js";
 import "./App.css";
 
 export default function App() {
@@ -11,6 +11,10 @@ export default function App() {
   const [fen, setFen] = useState(game.current.fen());
   const [pgn, setPgn] = useState("");
   const [status, setStatus] = useState("");
+
+  // Add this state to store moves as arrays
+  const [whiteMoves, setWhiteMoves] = useState([]);
+  const [blackMoves, setBlackMoves] = useState([]);
 
   // helper to be compatible with different chess.js versions (in_checkmate / isCheckmate)
   const _inCheck = (g) =>
@@ -96,6 +100,17 @@ export default function App() {
   function updateStatus() {
     const moveColor = game.current.turn() === "w" ? "White" : "Black";
 
+    // Parse moves for columns
+    const history = game.current.history();
+    const whites = [];
+    const blacks = [];
+    history.forEach((move, idx) => {
+      if (idx % 2 === 0) whites.push(move);
+      else blacks.push(move);
+    });
+    setWhiteMoves(whites);
+    setBlackMoves(blacks);
+
     if (_inCheckmate(game.current)) {
       setStatus(`Game over, ${moveColor} is in checkmate.`);
       return;
@@ -149,9 +164,26 @@ export default function App() {
           <div className="board-snapshot">{fen}</div>
 
           <div>
-            <strong>PGN:</strong>
+            <strong>Moves:</strong>
           </div>
-          <div className="board-record">{pgn || "(empty)"}</div>
+          <div className="moves-columns">
+            <div className="moves-col">
+              <div className="moves-header">White</div>
+              <div className="moves-list">
+                {whiteMoves.map((move, idx) => (
+                  <div key={idx}>{move}</div>
+                ))}
+              </div>
+            </div>
+            <div className="moves-col">
+              <div className="moves-header">Black</div>
+              <div className="moves-list">
+                {blackMoves.map((move, idx) => (
+                  <div key={idx}>{move}</div>
+                ))}
+              </div>
+            </div>
+          </div>
 
           <div className="App-info-actions">
             <button onClick={resetBoard}>Reset</button>

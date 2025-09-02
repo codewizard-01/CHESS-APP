@@ -127,3 +127,36 @@ h2 {
     width: 100%;
   }
 }
+
+/* Add at the end of your App.css */
+
+.moves-columns {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.moves-col {
+  flex: 1;
+  background: #23272b;
+  border-radius: 6px;
+  padding: 8px;
+  max-height: 140px;
+  overflow-y: auto;
+  min-width: 60px;
+}
+
+.moves-header {
+  font-weight: bold;
+  color: #7fff7f;
+  margin-bottom: 6px;
+  text-align: center;
+  font-size: 1em;
+  letter-spacing: 1px;
+}
+
+.moves-list {
+  font-family: "Fira Mono", "Consolas", monospace;
+  color: #bdbdbd;
+  font-size: 1em;
+}
